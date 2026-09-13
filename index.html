@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Math Rain</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app" class="app-shell">
+      <div id="menuScreen" class="screen active">
+        <div class="menu-panel">
+          <button class="primary-btn" data-screen="game">Chơi game</button>
+          <button class="secondary-btn" data-screen="history">Lịch sử</button>
+          <button class="secondary-btn" data-screen="settings">Cài đặt</button>
+        </div>
+      </div>
+
+      <div id="settingsScreen" class="screen">
+        <div class="panel settings-panel">
+          <h2>Cài đặt</h2>
+          <div class="setting-row">
+            <label for="spawnRateInput">Tốc độ sinh giọt</label>
+            <input id="spawnRateInput" type="number" min="0.5" max="10" step="0.01" value="1.25" />
+          </div>
+          <div class="setting-row">
+            <label for="dropSpeedInput">Tốc độ rơi</label>
+            <input id="dropSpeedInput" type="number" min="0.5" max="10" step="0.01" value="1.25" />
+          </div>
+          <div class="setting-group">
+            <p>Chế độ toán</p>
+            <label><input type="checkbox" class="mode-toggle" data-mode="addition" checked /> Cộng</label>
+            <label><input type="checkbox" class="mode-toggle" data-mode="subtraction" checked /> Trừ</label>
+            <label><input type="checkbox" class="mode-toggle" data-mode="multiplication" checked /> Nhân</label>
+            <label><input type="checkbox" class="mode-toggle" data-mode="division" checked /> Chia</label>
+            <label><input type="checkbox" class="mode-toggle" data-mode="advanced" checked /> Nâng cao</label>
+          </div>
+          <div class="button-row">
+            <button class="primary-btn" id="saveSettingsBtn">Lưu</button>
+            <button class="secondary-btn" id="settingsBackBtn">Quay lại</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="historyScreen" class="screen">
+        <div class="panel history-panel">
+          <div class="history-header">
+            <h2>Lịch sử</h2>
+            <div class="filter-group">
+              <button class="small-btn active" data-sort="score">Point cao nhất</button>
+              <button class="small-btn" data-sort="latest">Mới nhất</button>
+              <button class="small-btn history-back-btn" id="historyBackBtn">Quay lại</button>
+            </div>
+          </div>
+          <div id="historyEntries" class="history-entries"></div>
+          <div id="historyDetail" class="history-detail"></div>
+          <div id="lifetimeStats" class="lifetime-stats"></div>
+        </div>
+      </div>
+
+      <div id="gameScreen" class="screen">
+        <div class="game-ui">
+          <div class="hud-topbar">
+            <div class="pause-box" aria-label="Pause"></div>
+            <div class="score-box">
+              <span class="caption">SCORE</span>
+              <span id="scoreValue">0</span>
+            </div>
+            <div class="lives-badge">
+              <span id="livesValue">5</span>
+            </div>
+          </div>
+
+          <div class="status-strip">
+            <div class="status-pill"><span>Time</span><strong id="timeValue">0.00s</strong></div>
+            <div class="status-pill"><span>Spawn</span><strong id="spawnValue">1.25</strong></div>
+            <div class="status-pill"><span>Drop</span><strong id="dropValue">1.25</strong></div>
+          </div>
+
+          <div class="exp-panel">
+            <div class="exp-header">
+              <span>Lv <strong id="levelValue">1</strong></span>
+              <span id="expText">0/5000 - 0.00%</span>
+            </div>
+            <div class="exp-bar">
+              <div id="expFill"></div>
+            </div>
+          </div>
+
+          <div class="cloud cloud-one"></div>
+          <div class="cloud cloud-two"></div>
+          <div id="gameBoard" class="game-board" aria-label="Game board"></div>
+
+          <div class="answer-box">
+            <div id="answerDisplay" class="answer-display">0</div>
+            <button id="clearAnswerBtn" class="clear-answer" aria-label="Xóa đáp án" type="button">×</button>
+          </div>
+
+          <div class="numpad-wrap">
+            <div class="numpad">
+              <button class="key" data-value="7">7</button>
+              <button class="key" data-value="8">8</button>
+              <button class="key" data-value="9">9</button>
+              <button class="key" data-value="4">4</button>
+              <button class="key" data-value="5">5</button>
+              <button class="key" data-value="6">6</button>
+              <button class="key" data-value="1">1</button>
+              <button class="key" data-value="2">2</button>
+              <button class="key" data-value="3">3</button>
+              <button class="key" data-value="0">0</button>
+              <button class="key special enter-key" data-action="enter">Enter</button>
+            </div>
+          </div>
+
+          <div class="bottom-bar">
+            <button id="startBtn" class="start-btn">Start</button>
+            <button id="backToMenuBtn" class="ghost-btn">Menu</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="endScreen" class="screen overlay-screen">
+        <div class="panel end-panel">
+          <h2>End Game</h2>
+          <div class="stats-grid">
+            <div><span>Point</span><strong id="endScore">0</strong></div>
+            <div><span>Giọt phá</span><strong id="endKills">0</strong></div>
+            <div><span>Tốc độ nhanh nhất</span><strong id="fastestRate">0.00</strong></div>
+            <div><span>Tốc độ trung bình</span><strong id="avgRate">0.00</strong></div>
+          </div>
+          <div class="color-summary" id="colorSummary"></div>
+          <canvas id="speedGraph" width="420" height="160"></canvas>
+          <div class="button-row center">
+            <button class="primary-btn" id="playAgainBtn">Chơi lại</button>
+            <button class="secondary-btn" id="endMenuBtn">Menu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
